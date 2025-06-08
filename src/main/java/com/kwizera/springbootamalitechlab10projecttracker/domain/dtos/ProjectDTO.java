@@ -5,9 +5,11 @@ import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 public record ProjectDTO(
+        UUID id,
         String name,
         String description,
         StatusEnum status,

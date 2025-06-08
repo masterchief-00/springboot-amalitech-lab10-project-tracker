@@ -4,6 +4,7 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Develo
 import com.kwizera.springbootamalitechlab10projecttracker.repositories.DeveloperRepository;
 import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServices;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ public class DeveloperServicesImpl implements DeveloperServices {
         return developerRepository.findById(id);
     }
 
+    @Cacheable("developers")
     @Override
     public Page<Developer> getAllDevelopers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

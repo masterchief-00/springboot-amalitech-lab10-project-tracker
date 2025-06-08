@@ -4,7 +4,10 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Projec
 import com.kwizera.springbootamalitechlab10projecttracker.repositories.ProjectRepository;
 import com.kwizera.springbootamalitechlab10projecttracker.services.ProjectServices;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +24,11 @@ public class ProjectServicesImpl implements ProjectServices {
         return Optional.empty();
     }
 
+    @Cacheable("projects")
     @Override
-    public Page<Project> getAllProjects() {
-        return null;
+    public Page<Project> getAllProjects(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return projectRepository.findAll(pageable);
     }
 
     @Override

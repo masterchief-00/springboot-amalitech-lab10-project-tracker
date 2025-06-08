@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface ProjectServices {
     Optional<Project> getProject(UUID id);
 
-    Page<Project> getAllProjects();
+    Page<Project> getAllProjects(int page, int size);
 
     Project updateProject(UUID id, Project project);
 

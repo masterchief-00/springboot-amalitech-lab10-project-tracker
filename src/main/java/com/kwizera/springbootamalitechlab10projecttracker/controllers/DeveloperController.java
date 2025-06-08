@@ -29,7 +29,10 @@ public class DeveloperController {
     @GetMapping
     public ResponseEntity<List<DeveloperDTO>> getDevelopers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Page<Developer> developerPage = developerServices.getAllDevelopers(page, size);
-        List<DeveloperDTO> developers = developerPage.stream().map(EntityToDTO::developerEntityToDTO).toList();
+        List<DeveloperDTO> developers = developerPage.stream()
+                .map(EntityToDTO::developerEntityToDTO)
+                .toList();
+
         return new ResponseEntity<>(developers, HttpStatus.OK);
     }
 
@@ -51,12 +54,6 @@ public class DeveloperController {
 
         Developer createdDeveloper = developerServices.registerDeveloper(developer);
 
-        DeveloperDTO developerDTO = DeveloperDTO.builder()
-                .id(createdDeveloper.getId())
-                .names(createdDeveloper.getFirstName() + " " + createdDeveloper.getLastName())
-                .email(createdDeveloper.getEmail())
-                .skills(createdDeveloper.getSkills().stream().map(Skill::getName).toList())
-                .build();
-        return new ResponseEntity<>(developerDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(EntityToDTO.developerEntityToDTO(createdDeveloper), HttpStatus.CREATED);
     }
 }
