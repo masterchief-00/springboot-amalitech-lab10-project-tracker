@@ -21,7 +21,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
@@ -50,6 +50,7 @@ public class Project {
 
     @PrePersist
     protected void onCreate() {
+        this.status = StatusEnum.PENDING;
         this.createdAt = LocalDate.now();
         this.updatedAt = LocalDate.now();
     }

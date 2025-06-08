@@ -44,6 +44,7 @@ public class Task {
 
     @PrePersist
     protected void onCreate() {
+        this.status=StatusEnum.PENDING;
         this.createdAt = LocalDate.now();
         this.updatedAt = LocalDate.now();
     }
