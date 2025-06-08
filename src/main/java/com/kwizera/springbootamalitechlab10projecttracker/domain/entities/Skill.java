@@ -2,7 +2,6 @@ package com.kwizera.springbootamalitechlab10projecttracker.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.id.factory.spi.GenerationTypeStrategy;
 
 import java.time.LocalDate;
 import java.util.HashSet;

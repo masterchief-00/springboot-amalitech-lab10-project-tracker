@@ -9,17 +9,16 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
+@Table(name = "developers")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Table(name = "developers")
 public class Developer {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID ID;
+    private UUID id;
 
     @Column(nullable = false)
     private String firstName;

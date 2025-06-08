@@ -1,14 +1,19 @@
 package com.kwizera.springbootamalitechlab10projecttracker.services.impl;
 
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Developer;
+import com.kwizera.springbootamalitechlab10projecttracker.repositories.DeveloperRepository;
 import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServices;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class DeveloperServicesImpl implements DeveloperServices {
+    private final DeveloperRepository developerRepository;
+
     @Override
     public Optional<Developer> getDeveloper(UUID id) {
         return Optional.empty();
@@ -16,7 +21,7 @@ public class DeveloperServicesImpl implements DeveloperServices {
 
     @Override
     public Developer registerDeveloper(Developer developer) {
-        return null;
+        return developerRepository.save(developer);
     }
 
     @Override
