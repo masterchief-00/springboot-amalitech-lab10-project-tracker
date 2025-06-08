@@ -6,6 +6,7 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Develo
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Project;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Task;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.mappers.EntityToDTO;
+import com.kwizera.springbootamalitechlab10projecttracker.services.AuditLogServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.ProjectServices;
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class ProjectController {
     private final DeveloperServices developerServices;
     private final ProjectServices projectServices;
+    private final AuditLogServices auditLogServices;
 
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> getAllProjects(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
@@ -32,6 +35,18 @@ public class ProjectController {
         List<ProjectDTO> projects = projectPage.stream()
                 .map(EntityToDTO::projectEntityToDTO)
                 .toList();
+
+        auditLogServices.log(
+                "Retrieve",
+                "Project",
+                "N/A",
+                "admin",
+                Map.of(
+                        "pageNumber", page,
+                        "pageSize", size,
+                        "resultsCount", projects.size()
+                )
+        );
 
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
@@ -67,6 +82,18 @@ public class ProjectController {
         newProject.setTasks(tasks);
 
         Project createdProject = projectServices.createProject(newProject);
+
+        auditLogServices.log(
+                "Create",
+                "Project",
+                createdProject.getId().toString(),
+                "admin",
+                Map.of(
+                        "projectName", createdProject.getName(),
+                        "projectDesc", createdProject.getDescription(),
+                        "projectDeadline", createdProject.getDeadline()
+                )
+        );
 
         return new ResponseEntity<>(EntityToDTO.projectEntityToDTO(createdProject), HttpStatus.CREATED);
     }
