@@ -5,6 +5,7 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.dtos.DeveloperD
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Developer;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Skill;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.mappers.EntityToDTO;
+import com.kwizera.springbootamalitechlab10projecttracker.services.AuditLogServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.SkillServices;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class DeveloperController {
     private final SkillServices skillServices;
     private final DeveloperServices developerServices;
+    private final AuditLogServices auditLogServices;
 
     @GetMapping
     public ResponseEntity<List<DeveloperDTO>> getDevelopers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
@@ -33,6 +36,17 @@ public class DeveloperController {
                 .map(EntityToDTO::developerEntityToDTO)
                 .toList();
 
+        auditLogServices.log(
+                "Retrieve",
+                "Developer",
+                "N/A",
+                "admin",
+                Map.of(
+                        "pageNumber", page,
+                        "pageSize", size,
+                        "resultsCount", developers.size()
+                )
+        );
         return new ResponseEntity<>(developers, HttpStatus.OK);
     }
 
@@ -53,6 +67,18 @@ public class DeveloperController {
                 .build();
 
         Developer createdDeveloper = developerServices.registerDeveloper(developer);
+
+        auditLogServices.log(
+                "Create",
+                "Developer",
+                createdDeveloper.getId().toString(),
+                "admin",
+                Map.of(
+                        "firstName", createdDeveloper.getFirstName(),
+                        "lastName", createdDeveloper.getLastName(),
+                        "email", createdDeveloper.getEmail()
+                )
+        );
 
         return new ResponseEntity<>(EntityToDTO.developerEntityToDTO(createdDeveloper), HttpStatus.CREATED);
     }
