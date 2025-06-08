@@ -4,6 +4,7 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Task;
 import com.kwizera.springbootamalitechlab10projecttracker.repositories.TaskRepository;
 import com.kwizera.springbootamalitechlab10projecttracker.services.TaskServices;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class TaskServicesImpl implements TaskServices {
     private final TaskRepository taskRepository;
 
+    @Cacheable(value = "tasks",key = "'projectId:'+#projectId")
     @Override
     public Page<Task> getTasksByProject(int page, int size, UUID projectId, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());

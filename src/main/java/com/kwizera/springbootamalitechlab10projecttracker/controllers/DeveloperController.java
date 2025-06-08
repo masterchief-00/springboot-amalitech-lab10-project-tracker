@@ -32,6 +32,7 @@ public class DeveloperController {
         List<DeveloperDTO> developers = developerPage.stream()
                 .map(EntityToDTO::developerEntityToDTO)
                 .toList();
+
         return new ResponseEntity<>(developers, HttpStatus.OK);
     }
 
