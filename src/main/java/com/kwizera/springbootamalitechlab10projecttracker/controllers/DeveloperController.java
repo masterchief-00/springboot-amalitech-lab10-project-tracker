@@ -8,6 +8,8 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.mappers.EntityT
 import com.kwizera.springbootamalitechlab10projecttracker.services.AuditLogServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.SkillServices;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,11 +26,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/developers")
+@Tag(name = "Developers Controller", description = "This controller exposes endpoints for all CRUD operations regarding developers")
 public class DeveloperController {
     private final SkillServices skillServices;
     private final DeveloperServices developerServices;
     private final AuditLogServices auditLogServices;
 
+    @Operation(summary = "Retrieves all developers (with pagination) ")
     @GetMapping
     public ResponseEntity<List<DeveloperDTO>> getDevelopers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Page<Developer> developerPage = developerServices.getAllDevelopers(page, size);
@@ -50,6 +54,7 @@ public class DeveloperController {
         return new ResponseEntity<>(developers, HttpStatus.OK);
     }
 
+    @Operation(summary = "Creates a new developer")
     @PostMapping
     public ResponseEntity<DeveloperDTO> createDev(@Valid @RequestBody CreateDeveloperRequestDTO developerDetails) {
         Set<Skill> skillSet = developerDetails.skills()

@@ -9,6 +9,8 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.mappers.EntityT
 import com.kwizera.springbootamalitechlab10projecttracker.services.AuditLogServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.ProjectServices;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,11 +26,13 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/projects")
+@Tag(name = "Projects Controller", description = "This controller exposes endpoints for all CRUD operations regarding projects")
 public class ProjectController {
     private final DeveloperServices developerServices;
     private final ProjectServices projectServices;
     private final AuditLogServices auditLogServices;
 
+    @Operation(summary = "Retrieves all projects (with pagination)")
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> getAllProjects(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Page<Project> projectPage = projectServices.getAllProjects(page, size);
@@ -51,6 +55,7 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
+    @Operation(summary = "Creates a new project")
     @PostMapping
     public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody CreateProjectRequestDTO projectDetails) {
         List<Developer> developers = projectDetails
