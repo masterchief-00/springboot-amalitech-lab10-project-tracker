@@ -1,7 +1,9 @@
 package com.kwizera.springbootamalitechlab10projecttracker.services.impl;
 
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Task;
+import com.kwizera.springbootamalitechlab10projecttracker.repositories.TaskRepository;
 import com.kwizera.springbootamalitechlab10projecttracker.services.TaskServices;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,7 +11,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class TaskServicesImpl implements TaskServices {
+    private final TaskRepository taskRepository;
+
     @Override
     public List<Task> getTasksByProject(UUID projectId) {
         return null;
@@ -22,7 +27,7 @@ public class TaskServicesImpl implements TaskServices {
 
     @Override
     public Task createTask(Task task) {
-        return null;
+        return taskRepository.save(task);
     }
 
     @Override

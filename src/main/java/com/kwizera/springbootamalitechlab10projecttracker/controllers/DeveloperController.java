@@ -4,19 +4,18 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.dtos.CreateDeve
 import com.kwizera.springbootamalitechlab10projecttracker.domain.dtos.DeveloperDTO;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Developer;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Skill;
+import com.kwizera.springbootamalitechlab10projecttracker.domain.mappers.EntityToDTO;
 import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServices;
 import com.kwizera.springbootamalitechlab10projecttracker.services.SkillServices;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +25,13 @@ import java.util.stream.Collectors;
 public class DeveloperController {
     private final SkillServices skillServices;
     private final DeveloperServices developerServices;
+
+    @GetMapping
+    public ResponseEntity<List<DeveloperDTO>> getDevelopers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<Developer> developerPage = developerServices.getAllDevelopers(page, size);
+        List<DeveloperDTO> developers = developerPage.stream().map(EntityToDTO::developerEntityToDTO).toList();
+        return new ResponseEntity<>(developers, HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<DeveloperDTO> createDev(@Valid @RequestBody CreateDeveloperRequestDTO developerDetails) {
@@ -46,6 +52,7 @@ public class DeveloperController {
         Developer createdDeveloper = developerServices.registerDeveloper(developer);
 
         DeveloperDTO developerDTO = DeveloperDTO.builder()
+                .id(createdDeveloper.getId())
                 .names(createdDeveloper.getFirstName() + " " + createdDeveloper.getLastName())
                 .email(createdDeveloper.getEmail())
                 .skills(createdDeveloper.getSkills().stream().map(Skill::getName).toList())

@@ -5,12 +5,14 @@ import lombok.Builder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Builder
 public record DeveloperDTO(
+        UUID id,
         String names,
         String email,
-        Optional<String> project,
+        String project,
         List<String> skills
 ) {
 }

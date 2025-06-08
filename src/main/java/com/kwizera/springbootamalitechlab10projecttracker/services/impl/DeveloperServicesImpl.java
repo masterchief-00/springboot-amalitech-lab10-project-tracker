@@ -4,6 +4,9 @@ import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Develo
 import com.kwizera.springbootamalitechlab10projecttracker.repositories.DeveloperRepository;
 import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServices;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,7 +19,13 @@ public class DeveloperServicesImpl implements DeveloperServices {
 
     @Override
     public Optional<Developer> getDeveloper(UUID id) {
-        return Optional.empty();
+        return developerRepository.findById(id);
+    }
+
+    @Override
+    public Page<Developer> getAllDevelopers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return developerRepository.findAll(pageable);
     }
 
     @Override
