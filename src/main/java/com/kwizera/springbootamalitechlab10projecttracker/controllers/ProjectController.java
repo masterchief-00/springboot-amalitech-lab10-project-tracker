@@ -10,12 +10,10 @@ import com.kwizera.springbootamalitechlab10projecttracker.services.DeveloperServ
 import com.kwizera.springbootamalitechlab10projecttracker.services.ProjectServices;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +25,16 @@ import java.util.Optional;
 public class ProjectController {
     private final DeveloperServices developerServices;
     private final ProjectServices projectServices;
+
+    @GetMapping
+    public ResponseEntity<List<ProjectDTO>> getAllProjects(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<Project> projectPage = projectServices.getAllProjects(page, size);
+        List<ProjectDTO> projects = projectPage.stream()
+                .map(EntityToDTO::projectEntityToDTO)
+                .toList();
+
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody CreateProjectRequestDTO projectDetails) {
@@ -60,15 +68,6 @@ public class ProjectController {
 
         Project createdProject = projectServices.createProject(newProject);
 
-        ProjectDTO projectDTO = ProjectDTO.builder()
-                .name(createdProject.getName())
-                .description(createdProject.getDescription())
-                .status(createdProject.getStatus())
-                .deadline(createdProject.getDeadline())
-                .developers(createdProject.getDevelopers().stream().map(EntityToDTO::developerEntityToDTO).toList())
-                .tasks(createdProject.getTasks().stream().map(EntityToDTO::taskEntityToDTO).toList())
-                .build();
-
-        return new ResponseEntity<>(projectDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(EntityToDTO.projectEntityToDTO(createdProject), HttpStatus.CREATED);
     }
 }

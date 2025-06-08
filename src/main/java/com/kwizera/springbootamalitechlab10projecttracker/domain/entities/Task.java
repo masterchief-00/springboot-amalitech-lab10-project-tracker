@@ -33,7 +33,7 @@ public class Task {
     private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id",nullable = false)
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @Column(nullable = false)
@@ -44,7 +44,7 @@ public class Task {
 
     @PrePersist
     protected void onCreate() {
-        this.status=StatusEnum.PENDING;
+        this.status = StatusEnum.PENDING;
         this.createdAt = LocalDate.now();
         this.updatedAt = LocalDate.now();
     }

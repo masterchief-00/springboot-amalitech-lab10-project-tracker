@@ -1,6 +1,7 @@
 package com.kwizera.springbootamalitechlab10projecttracker.domain.mappers;
 
 import com.kwizera.springbootamalitechlab10projecttracker.domain.dtos.DeveloperDTO;
+import com.kwizera.springbootamalitechlab10projecttracker.domain.dtos.ProjectDTO;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.dtos.TaskDTO;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Developer;
 import com.kwizera.springbootamalitechlab10projecttracker.domain.entities.Project;
@@ -26,6 +27,24 @@ public class EntityToDTO {
                 .description(taskEntity.getDescription())
                 .status(taskEntity.getStatus())
                 .deadline(taskEntity.getDueDate())
+                .build();
+    }
+
+    public static ProjectDTO projectEntityToDTO(Project projectEntity) {
+        return ProjectDTO.builder()
+                .id(projectEntity.getId())
+                .name(projectEntity.getName())
+                .description(projectEntity.getDescription())
+                .status(projectEntity.getStatus())
+                .deadline(projectEntity.getDeadline())
+                .developers(projectEntity.getDevelopers()
+                        .stream()
+                        .map(EntityToDTO::developerEntityToDTO)
+                        .toList())
+                .tasks(projectEntity.getTasks()
+                        .stream()
+                        .map(EntityToDTO::taskEntityToDTO)
+                        .toList())
                 .build();
     }
 }
