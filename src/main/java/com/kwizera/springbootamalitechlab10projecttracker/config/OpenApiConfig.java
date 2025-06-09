@@ -1,4 +1,4 @@
-package com.kwizera.springbootamalitechlab09taskmanager.config;
+package com.kwizera.springbootamalitechlab10projecttracker.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
